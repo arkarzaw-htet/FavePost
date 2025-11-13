@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+</head>
+<body>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <input type="password" id="pass" placeholder="Enter your password">
+
+
+  <button id="getDataBtn">Register</button>
+
+  <pre id="output"></pre>
+  <p>Go to main: <a href="index.html">Main</a></p>
+  <p>Go to register: <a href="log.html">Login</a></p>
+
+  <script>
+    
+
+    const button = document.getElementById('getDataBtn');
+
+
+    const output = document.getElementById('output');
+
+
+
+    button.addEventListener('click', () => {
+      const name = document.getElementById('nameInput').value;
+      const password = document.getElementById("pass").value;
+
+
+      fetch('http://127.0.0.1:8000/register', {
+        method: 'POST', // Method is POST
+        headers: {
+          'Content-Type': 'application/json' // We are sending JSON
+        },
+        body: JSON.stringify({ username: name, password: password }) // Convert JS object to JSON string
+      })
+      .then(response => response.json())
+      .then(data => {
+        output.textContent = JSON.stringify(data, null, 2); // Show response
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fetch API Example</title>
+</head>
+<body>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <input type="text" id="text" placeholder="Enter your text">
+
+  <button id="setDataBtn">Send</button>
+  <p>Go to login: <a href="log.html">Login</a></p>
+  <p>Go to register: <a href="reg.html">Register</a></p>
+
+
+  <script>
+    
+
+
+    const button1 = document.getElementById('setDataBtn');
+
+    button1.addEventListener('click', () =>{
+        const name = document.getElementById('nameInput').value;
+        const text = document.getElementById('text').value;
+
+        fetch('http://127.0.0.1:8000/upload' , {
+            method : 'POST',
+            headers :{
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify({username : name , post : text})
+        })
+
+
+    });
+
+
+  </script>
+</body>
+</html>
