@@ -38,6 +38,9 @@ class UserIn(BaseModel):
 class UserUp(BaseModel):
     username: str
     post: str
+    
+class UserAuth(BaseModel):
+    username: str
 
 # Dependency
 def get_db():
@@ -78,4 +81,14 @@ def send(user: UserUp, db: Session = Depends(get_db)):
     db.commit()
     
     db.refresh(db_user)
-    
+
+@app.delete("/")
+def send(user: UserAuth, db: Session = Depends(get_db)): # 👈 CHANGED UserUp to UserAuth
+    db_user = db.query(User).filter(User.username == user.username).first()
+    if not db_user:
+        return {"code": "Username not found"}
+
+    db_user.contents.clear()   
+    db.commit()
+
+    return {"message": "deleted"}

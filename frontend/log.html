@@ -13,37 +13,74 @@
   <pre id="output"></pre>
   <p>Go to main: <a href="index.html">Main</a></p>
   <p>Go to register: <a href="reg.html">Register</a></p>
+  <button id="deleteAllBtn" style="display:none; margin-top:10px;">
+  Delete All
+  </button>
 
-  <script>
-    
-
-    const button = document.getElementById('getDataBtn');
-
-
-    const output = document.getElementById('output');
-
-
-
-    button.addEventListener('click', () => {
-      const name = document.getElementById('nameInput').value;
-      const password = document.getElementById("pass").value;
+  <style>
+  #output {
+    max-width: 300px;   /* change to any width you want */
+    word-wrap: break-word;
+    white-space: normal;
+  }
+</style>
 
 
-      fetch('http://127.0.0.1:8000/login', {
-        method: 'POST', // Method is POST
-        headers: {
-          'Content-Type': 'application/json' // We are sending JSON
-        },
-        body: JSON.stringify({ username: name, password: password }) // Convert JS object to JSON string
-      })
-      .then(response => response.json())
-      .then(data => {
-        output.textContent = JSON.stringify(data, null, 2); // Show response
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    });
-  </script>
+<script>
+
+const loginBtn = document.getElementById("getDataBtn");
+const deleteBtn = document.getElementById("deleteAllBtn");
+const output = document.getElementById("output");
+
+loginBtn.addEventListener("click", () => {
+
+  const name = document.getElementById("nameInput").value;
+  const password = document.getElementById("pass").value;
+
+  fetch("http://127.0.0.1:8000/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: name, password: password })
+  })
+  .then(r => r.json())
+  .then(data => {
+
+    if (!data.contents) {
+      output.textContent = "Invalid login!";
+      return;
+    }
+
+    // show content
+    const html = data.contents.map(item => `<li>${item}</li>`).join("");
+    output.innerHTML = `<ul>${html}</ul>`;
+
+    // show delete button
+    deleteBtn.style.display = "block";
+
+  })
+  .catch(err => console.error(err));
+});
+
+
+deleteBtn.addEventListener("click", () => {
+
+  const name = document.getElementById("nameInput").value;
+
+  fetch("http://127.0.0.1:8000/", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: name })
+  })
+  .then(r => r.json())
+  .then(data => {
+    output.innerHTML = "";
+    alert("All contents deleted!");
+  })
+  .catch(err => console.error(err));
+
+});
+
+</script>
+
 </body>
 </html>
